@@ -16,9 +16,7 @@ bash compile-test.sh
 
 # OUTPUT:  
   PROJBASEDIR =/home/kurt5/jprogmore/testit/springboot-core/dumb-tester00
-  ~/jprogmore/testit/springboot-core/dumb-tester00/src/test/java ~/jprogmore/testit/springboot-core/dumb-tester00
   compiling - a/b/dumbtester00/UtiltyATest.java
-  ~/jprogmore/testit/springboot-core/dumb-tester00
   running junit - a.b.dumbtester00.UtiltyATest
   
   💚 Thanks for using JUnit! Support its development at https://junit.org/sponsoring
