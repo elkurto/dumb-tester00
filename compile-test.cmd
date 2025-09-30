@@ -20,3 +20,42 @@ set "CLASSFILETEST=%JAVAFILETEST:/=.%"
 REM specfy location of jar file depenedencies
 set JARLIBDIR=%PROJBASEDIR%/target/dumb-tester00-0.0.1-SNAPSHOT/WEB-INF/lib
 
+set CLASSDIR=%PROJBASEDIR%/target/CLASSFILETEST
+set SRCDIR=%PROJBASEDIR%/src/test/java
+
+REM replace / with \ in SRCDIR
+set "SRCDIR_BACKSLASH=%SRCDIR=/=\%"
+
+set TESTCLASSDIR=%PROJBASEDIR%/target/test-classes
+
+mkdir "%TESTCLASSDIR:/=\%"
+
+pushd %SRCDIR_BACKSLASH%
+
+echo compiling %JAVAFILETEST%
+
+javac -d %TESTCLASSDIR% -classpath %SRCDIR%;%CLASSDIR%;%SCRIPTDIR%/junit-platform-console-standalone-1.13.0-M3.jar %JAVATESTFILE%
+
+popd
+
+setlocal enabledelayedexpansion
+
+set "JARLIBDIR_BACKSLASH=%JARLIBDIR:/=\%"
+set FILELIST=
+for %%F in (%JARLIBDIR_BACKSLASH\jackson-*.jar) do (
+    if defined FILELIST (
+        set "FILELIST=!FILELIST!;%%F"
+    ) else (
+        set "FILELIST=%%F"
+    )
+)
+
+echo FILELIST = %FILELIST%
+
+set "FILELIST=%FILELIST:\=/%"
+
+echo running junit - %CLASSFILETEST%
+
+java -jar %SCRIPTDIR%/junit-platform-console-standalone-1.13.0-M3.jar execute -cp %CLASSDIR%;%TESTCLASSDIR%;%FILELIST% --select-class %CLASSFILETEST%
+
+endlocal
