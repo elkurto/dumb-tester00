@@ -11,4 +11,12 @@ set PROJBASEDIR=%PROJBASEDIR:\=/%
 
 echo %PROJBASEDIR%
 
-JAVAFILETEST=a/b/dumbtester00/UtiltyATest.java
+set JAVAFILETEST=a/b/dumbtester00/UtiltyATest.java
+set "JAVAFILETEST=%JAVAFILETEST:\=/%"
+set "CLASSFILETEST=%JAVAFILETEST:~0,-5%"
+set "CLASSFILETEST=%JAVAFILETEST:/=.%"
+
+
+REM specfy location of jar file depenedencies
+set JARLIBDIR=%PROJBASEDIR%/target/dumb-tester00-0.0.1-SNAPSHOT/WEB-INF/lib
+
