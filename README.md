@@ -48,3 +48,11 @@ bash compile-test.sh
            Please use the 'execute' command directly.
 
 ```
+
+
+### Notes:
+cd dumb-tester00/
+mvn -f pom.xml package
+mvn -f pom2.xml jar:jar
+cd target/test-classes/
+java -jar ../../junit-platform-console-standalone-1.13.0-M3.jar execute -cp . -select-class a.b.dumbtester00.UtiltyATest
