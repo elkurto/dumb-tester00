@@ -51,8 +51,8 @@ bash compile-test.sh
 
 
 ### Notes:
+1. working attempt 1
 cd dumb-tester00/
 mvn -f pom.xml package
 mvn -f pom2.xml jar:jar
-cd target/test-classes/
-java -jar ../../junit-platform-console-standalone-1.13.0-M3.jar execute -cp . -select-class a.b.dumbtester00.UtiltyATest
+java -jar junit-platform-console-standalone-1.13.0-M3.jar execute -cp .:target/classes:target/test-classes --select-class a.b.dumbtester00.service.UtilityATest
