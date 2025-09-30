@@ -56,6 +56,9 @@ set "FILELIST=%FILELIST:\=/%"
 
 echo running junit - %CLASSFILETEST%
 
+REM - option A : Either java.exe needs jar files list in -cp arg
+REM - option B : Or java.exe needs jar files listed in a MANIFEST.MF of a jar file that lists all jar dependencies
+REM -   maybe use the war file ?? or a custom maven build with jar-plugin.
 java -jar %SCRIPTDIR%/junit-platform-console-standalone-1.13.0-M3.jar execute -cp %CLASSDIR%;%TESTCLASSDIR%;%FILELIST% --select-class %CLASSFILETEST%
 
 endlocal
