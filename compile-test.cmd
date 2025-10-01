@@ -2,7 +2,7 @@
 
 REM conditionally remove trailing backslash
 set SCRIPTDIR=%~dp0
-if "%SCRIPTDIR:~1%"=="\" set "SCRIPTDIR=%SCRIPTDIR:~0,-1%"
+if "%SCRIPTDIR:~-1%"=="\" set "SCRIPTDIR=%SCRIPTDIR:~0,-1%"
 
 set PROJBASEDIR=%CD%
 REM conditionally remove trailing backslash
@@ -42,7 +42,7 @@ setlocal enabledelayedexpansion
 
 set "JARLIBDIR_BACKSLASH=%JARLIBDIR:/=\%"
 set FILELIST=
-for %%F in (%JARLIBDIR_BACKSLASH\jackson-*.jar) do (
+for %%F in (%JARLIBDIR_BACKSLASH%\jackson-*.jar) do (
     if defined FILELIST (
         set "FILELIST=!FILELIST!;%%F"
     ) else (
