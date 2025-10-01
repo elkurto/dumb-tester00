@@ -91,3 +91,7 @@ endlocal
 
 REM popd %TEMPDIR%
 popd
+
+REM Run a unit test
+REM Run a the junit-tainted.jar whose manifest species classpath that includes all WEB-INF/lib/*.jar 
+java -jar %JUNIT_TAINTED_JAR% execute -cp %CURRDIR%/target/test-classes;%CURRDIR/target/classes --select-class %CLASSFILETEST%
