@@ -28,7 +28,8 @@ set "JUNIT_TAINTED_JAR=%TEMPDIR%/junit-tainted.jar"
 
 copy %JUNIT_ORIG_JAR:/=\% %JUNIT_TAINTED_JAR:/=\%
 
-REM accumulate lis of jars (space separated)
+REM a. accumulate lis of jars (space separated)
+REM b. wrap each line at 70 chars including leading space " "
 
 setlocal enabledelayedexpansion
 
@@ -43,9 +44,50 @@ for %%F in (%JARLIBDIR_BACKSLASH%\*.jar) do (
     ) else (
         set "CLASS_PATH_IN_MANIFEST=%%F"
     )
-
 )
+
+set "CLASSPATH_TEMP_TXT=%TEMPDIR%/classpath.temp.txt"
+set "CLASS_PATH_IN_MANIFEST=Class-Path: %CLASS_PATH_IN_MANIFEST%"
+
+set "LONGSTRING=%CLASS_PATH_IN_MANIFEST%"
+set "CHUNK=%LONGSTRING:~0,70%"
+set "CHUNK=%CHUNK:\=/%"
+echo %CHUNK% > %CLASSPATH_TEMP_TXT%
+
+set "MAXLEN=69"
+set "OFFSET=70"
+set "ONESPACE= "
+
+:splitloop
+set "CHUNK=!LONGSTRING:~%OFFSET%,%MAXLEN%!"
+if "!CHUNK!"=="" goto :done
+set "CHUNK=%CHUNK\=/%"
+set /a OFFSET+=MAXLEN
+echo %ONESPACE%%CHUNK% >> %CLASSPATH_TEMP_TXT%
+goto :splitloop
+:done
+
+REM  extract original manifest
+jar -xvf %JUNIT_ORIG_JAR% META-INF/MAIFEST.MF
+
+REM remove trailing empty lines
+set "INFILE_TO_STRIP=META-INF\MANIFEST.MF"
+set "INFILE_TO_STRIP_TEMP=%INFILE_TO_STRIP%.temp.txt"
+del %INFILE_TO_STRIP_TEMP%
+
+for /f "usebackq delims=" %%A in ("%INFILE%") do (
+    echo %%A >> %INFILE_TO_STRIP_TEMP%
+)
+
+move %INFILE_TO_STRIP_TEMP% %INFILE_TO_STRIP%
+
+REM modify manifest -- add list of jars
+type %CLASSPATH_TEMP_TXT:/=\% >> META-INF\MANIFEST.MF
+
+REM update tainted manifest
+jar -uvfm %JUNIT_TAINTED_JAR% META-INF/MANIFEST.MF
 
 endlocal
 
+REM popd %TEMPDIR%
 popd
