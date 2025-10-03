@@ -178,7 +178,20 @@ class RunningJunit:
     os.chdir( self.c.curr_dir)
 
     return rval
-      
+  #end-method 
+
+  def run_test_class(self):
+    classpath =self.compose_classpath(self.c.test_classes_dir, self.c.classes_dir)
+    classpath =classpath.replace('\\', '/')
+
+    java_exe_cmd =f"{self.c.java_exe} -jar {self.c.junit_tainted_jar} execute -cp {classpath} --select-class {self.c.class_file_to_test}"
+    rval =self.run_command( java_exe_cmd )
+    return rval
+  #
+#end-class 'RunnerJunit'
+
+
+
 
 
 
