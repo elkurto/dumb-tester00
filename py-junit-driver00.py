@@ -115,7 +115,69 @@ class RunningJunit:
     class_path =self.c.pathsep.join( paths)
     return class_path
   
-  
+  def create_junit_tainted_jar_file(self):
+    if not os.path.exists( self.c.temp_dir):
+      os.mkdirs( self.c.temp_dir)
+    
+    os.chdir( self.c_temp_dir )
+
+    # copy
+    shutil.copy( self.c.junit_stanalone_jar_orig, self.c.junit_tainted_jar)
+
+    # create a custome manifest that includes WEB-INF/lib/*.jar
+    ## extract the extant manifest
+    self.run_command( f"{self.c.jar_exe} -xvf {self.c.junit_tainted_jar} META-INF/MANIFEST.MF")
+
+    ## compose list of jar-files in WEB-INF/lib/*.jar
+    lib_jars =glob.glob( os.path.join(self.c.web_inf_lib_dir, '*.jar'))
+
+    buffer =io.StringIO()
+    buffer.write('Class-Path: ')
+
+    ## compose Class-Path for mainifest 
+    ## (a. 70 char line, 
+    ##  b. leading space ' ' indicates continuation line)
+    
+    offset =11
+    maxlen =69
+    newline =chr(10)
+    space =chr(32)
+
+    for jar_file_name in lib_jars:
+      jar_file_name =jar_file_name.replace('\\', '/')
+      jar_file_name +=' '
+      for c in jar_file_name:
+        buffer.write(c)
+        offset +=1
+        if (offset % maxlen) == 0:
+          buffer.write(newline + space)
+      #enf-for
+    #end-for
+
+    manifest_mf =os.path.join( self.temp_dir, 'META-INF', 'MANIFEST.MF')
+    manifest_mf_temp_txt =os.path.join( self.c.temp_dir, 'manifest.mf.temp.txt')
+
+    with open( manifest_mf_temp_txt, 'wt') as MANIFEST_MF_TEMP_TXT:
+      with open( manifest_mf, 'rt' ) as MANIFEST_MF:
+        for line in MANIFEST_MF:
+          line =line.rstrip()
+
+          if len(line) > 0:
+            print(f"***line to manifest.mf.temp.txt :'{line}'")
+            MANIFEST_MF_TEMP_TXT.write( line + newline)
+      #end reader
+      # write the classpath to the temp file too
+      MANIFEST_MF_TEMP_TXT.write(buffer.getvalue())
+      MANIFEST_MF_TEMP_TXT.write(newline) 
+      MANIFEST_MF_TEMP_TXT.flush()
+    #end writer
+
+    # update MANIFEST.MF in taintedjar
+    self.run_command( f"{self.c.jar_exe} -uvfm {self.c.junit_tainted_jar} {manifest_mf_temp_txt}")
+    
+    os.chdir( self.c.curr_dir)
+
+    return rval
       
 
 
