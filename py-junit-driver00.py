@@ -190,7 +190,14 @@ class RunningJunit:
   #
 #end-class 'RunnerJunit'
 
+if __name__ == "__main__":
+  c =RunnerJunitConfig00()
 
+  runner_junit =RunningJunit()
+  runner_junit.configure( c )
+  print( f"CONFIG:\n runner_junit.c =f{runner_junit.c}\n\n\n")
+
+  runner_junit.run()
 
 
 
