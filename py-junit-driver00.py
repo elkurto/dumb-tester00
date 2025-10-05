@@ -178,7 +178,7 @@ class RunningJunit:
     #end writer
 
     # update MANIFEST.MF in taintedjar
-    self.run_command( f"{self.c.jar_exe} -uvfm {self.c.junit_tainted_jar} {manifest_mf_temp_txt}")
+    rval =self.run_command( f"{self.c.jar_exe} -uvfm {self.c.junit_tainted_jar} {manifest_mf_temp_txt}")
     
     os.chdir( self.c.curr_dir)
 
