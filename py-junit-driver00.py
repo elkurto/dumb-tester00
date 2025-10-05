@@ -60,7 +60,7 @@ class RunnerJunitConfig00:
     dir =re.sub( '^[A-Z]:', '', dir)
     return dir
   
-  def __str__(self)
+  def __str__(self):
     return f"RunnerJunitConfig00( {self.__dict__})"
   
 class RunningJunit:
