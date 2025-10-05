@@ -4,6 +4,10 @@ import glob
 import io
 import re
 
+##
+# @todo
+# 1. create a command line option handler for java_file_to_test
+#   b_use_extdirs_option
 class RunnerJunitConfig00:
   def __init__(self):
     self.script_dir =self.compute_script_dir()
